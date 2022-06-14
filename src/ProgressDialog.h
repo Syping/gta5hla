@@ -1,5 +1,5 @@
 /*****************************************************************************
-* gta5hla GTA V Hardlinking Tool
+* gta5hla GTA V Hardlinking Assistant
 * Copyright (C) 2022 Syping
 *
 * Redistribution and use in source and binary forms, with or without modification,

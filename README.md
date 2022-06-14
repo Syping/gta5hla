@@ -1,5 +1,5 @@
 ## gta5hla
-Open Source GTA V Hardlinking Tool
+Open Source Hardlinking Assistant for GTA V
 
 #### Build gta5hla
 
