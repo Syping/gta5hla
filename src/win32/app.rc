@@ -3,8 +3,8 @@
 CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "gta5hla.exe.manifest"
 #include <windows.h>
 VS_VERSION_INFO     VERSIONINFO
-FILEVERSION         0, 1, 0, 0
-PRODUCTVERSION      0, 1, 0, 0
+FILEVERSION         0, 1, 1, 0
+PRODUCTVERSION      0, 1, 1, 0
 FILEFLAGSMASK       0x3fL
 FILEFLAGS           0
 FILEOS              VOS_NT_WINDOWS32
@@ -21,12 +21,12 @@ BEGIN
         BEGIN
             VALUE   "CompanyName",      "Syping"
             VALUE   "FileDescription",  "gta5hla"
-            VALUE   "FileVersion",      "0.1.0"
+            VALUE   "FileVersion",      "0.1.1"
             VALUE   "InternalName",     "gta5hla"
             VALUE   "LegalCopyright",   "Copyright © 2022 Syping"
             VALUE   "OriginalFilename", "gta5hla.exe"
             VALUE   "ProductName",      "gta5hla"
-            VALUE   "ProductVersion",   "0.1.0"
+            VALUE   "ProductVersion",   "0.1.1"
         END
     END
 END
