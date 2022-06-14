@@ -36,6 +36,10 @@ int main(int argc, char *argv[])
     a.setApplicationName("gta5hla");
     a.setApplicationVersion("0.1.0");
 
+#ifdef Q_OS_WIN
+    a.setFont(QApplication::font("QMenu"));
+#endif
+
     HardlinkAssistant hla;
 
 #ifdef GTA5HLA_DEBUG
