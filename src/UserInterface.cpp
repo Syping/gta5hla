@@ -1,16 +1,38 @@
+/*****************************************************************************
+* gta5hla GTA V Hardlinking Tool
+* Copyright (C) 2022 Syping
+*
+* Redistribution and use in source and binary forms, with or without modification,
+* are permitted provided that the following conditions are met:
+*
+* 1. Redistributions of source code must retain the above copyright notice,
+* this list of conditions and the following disclaimer.
+*
+* 2. Redistributions in binary form must reproduce the above copyright notice,
+* this list of conditions and the following disclaimer in the documentation
+* and/or other materials provided with the distribution.
+*
+* This software is provided as-is, no warranties are given to you, we are not
+* responsible for anything with use of the software, you are self responsible.
+*****************************************************************************/
+
 // Qt includes
 #include <QFileDialog>
 #include <QInputDialog>
 #include <QMessageBox>
 
 // gta5hla includes
+#include "HardlinkThread.h"
+#include "ProgressDialog.h"
 #include "UserInterface.h"
 #include "ui_UserInterface.h"
 
-UserInterface::UserInterface(HardlinkAssistant *hla, QWidget *parent) :
-    QDialog(parent), hla(hla), ui(new Ui::UserInterface)
+UserInterface::UserInterface(HardlinkAssistant *hla, QWidget *parent) : QDialog(parent),
+    hla(hla), ui(new Ui::UserInterface)
 {
     ui->setupUi(this);
+    setWindowFlag(Qt::WindowContextHelpButtonHint, false);
+    QObject::connect(hla, &HardlinkAssistant::logUpdated, this, &UserInterface::logUpdated);
 
     QJsonValue gameObjectVal = hla->getJsonData().value("SocialClub");
     if (gameObjectVal.isObject()) {
@@ -39,9 +61,15 @@ UserInterface::UserInterface(HardlinkAssistant *hla, QWidget *parent) :
         ui->labEpicGames->setText(tr("Epic Games (%1):").arg(gameVersion));
     }
 
-    ui->btnOk->setFocus();
+    ui->btnLink->setFocus();
 }
 
+void UserInterface::logUpdated(const QString &text)
+{
+#ifdef GTA5HLA_DEBUG
+    qDebug() << text;
+#endif
+}
 
 void UserInterface::on_btnSocialClub_clicked()
 {
@@ -52,6 +80,7 @@ void UserInterface::on_btnSocialClub_clicked()
         QJsonObject gameJsonData;
         gameJsonData["Path"] = gamePath;
         gameJsonData["Version"] = gameVersion;
+        gameJsonData["Files"] = QJsonArray::fromStringList(HardlinkAssistant::getGameFiles(gamePath));
 
         ui->txtSocialClub->setText(gamePath);
         ui->labSocialClub->setText(tr("Social Club (%1):").arg(gameVersion));
@@ -75,6 +104,7 @@ void UserInterface::on_btnSteam_clicked()
         QJsonObject gameJsonData;
         gameJsonData["Path"] = gamePath;
         gameJsonData["Version"] = gameVersion;
+        gameJsonData["Files"] = QJsonArray::fromStringList(HardlinkAssistant::getGameFiles(gamePath));
 
         ui->txtEpicGames->setText(gamePath);
         ui->labEpicGames->setText(tr("Epic Games (%1):").arg(gameVersion));
@@ -98,6 +128,7 @@ void UserInterface::on_btnEpicGames_clicked()
         QJsonObject gameJsonData;
         gameJsonData["Path"] = gamePath;
         gameJsonData["Version"] = gameVersion;
+        gameJsonData["Files"] = QJsonArray::fromStringList(HardlinkAssistant::getGameFiles(gamePath));
 
         QJsonObject jsonData = hla->getJsonData();
         jsonData["EpicGames"] = gameJsonData;
@@ -109,7 +140,7 @@ void UserInterface::on_btnEpicGames_clicked()
     }
 }
 
-void UserInterface::on_btnOk_clicked()
+void UserInterface::on_btnLink_clicked()
 {
     QStringList masterGameList;
     const QJsonArray masterGameArray = hla->getJsonData().value("MasterGames").toArray();
@@ -128,6 +159,62 @@ void UserInterface::on_btnOk_clicked()
 
         hla->setMasterGame(masterGame);
     }
+
+    QStringList gameList;
+    if (hla->getJsonData().contains("SocialClub"))
+        gameList << "SocialClub";
+    if (hla->getJsonData().contains("Steam"))
+        gameList << "Steam";
+    if (hla->getJsonData().contains("EpicGames"))
+        gameList << "EpicGames";
+
+    QStringList slaveGameList = gameList;
+    slaveGameList.removeAll(masterGame);
+
+    QStringList masterGameFiles;
+    const QString masterGamePath = hla->getJsonData().value(masterGame).toObject().value("Path").toString();
+    const QJsonArray masterGameFilesArray = hla->getJsonData().value(masterGame).toObject().value("Files").toArray();
+    for (const QJsonValue &masterGameFileVal : masterGameFilesArray) {
+        masterGameFiles << masterGameFileVal.toString();
+    }
+
+    ProgressDialog progressDialog(hla, this);
+    progressDialog.open();
+
+    QStringList errorGameList;
+
+    for (const QString &slaveGame : slaveGameList) {
+        progressDialog.linkProgressCurrentUpdated(0);
+        progressDialog.setLinkLabelText(tr("Linking: %1").arg(slaveGame));
+        progressDialog.setWindowTitle(tr("gta5hla - Linking %1...").arg(slaveGame));
+
+        QEventLoop loop;
+
+        const QString slaveGamePath = hla->getJsonData().value(slaveGame).toObject().value("Path").toString();
+
+        HardlinkThread hardlinkThread(hla, masterGamePath, slaveGamePath, masterGameFiles);
+        QObject::connect(&hardlinkThread, &HardlinkThread::finished, this, [&]() {
+            loop.exit();
+        });
+        hardlinkThread.start();
+
+        loop.exec();
+
+        bool ok = hardlinkThread.isOk();
+        if (ok) {
+            progressDialog.appendLog(tr("Game Linked: %1").arg(slaveGame));
+        }
+        else {
+            progressDialog.appendLog(tr("Error: Linking %1 game failed").arg(slaveGame));
+            errorGameList << slaveGame;
+        }
+    }
+
+    if (errorGameList.count() != 0) {
+        QMessageBox::critical(&progressDialog, "gta5hla", tr("Error: Linking %n game(s) failed!\n\nFailed game(s): %1", "", errorGameList.count()).arg(errorGameList.join(", ")));
+    }
+
+    close();
 }
 
 UserInterface::~UserInterface()

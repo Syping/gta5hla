@@ -134,9 +134,9 @@ This tool helps you to hardlink your GTA V game files to save storage space, sel
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="btnOk">
+      <widget class="QPushButton" name="btnLink">
        <property name="text">
-        <string>&amp;OK</string>
+        <string>&amp;Link</string>
        </property>
        <property name="default">
         <bool>true</bool>

@@ -16,40 +16,35 @@
 * responsible for anything with use of the software, you are self responsible.
 *****************************************************************************/
 
-#ifndef HARDLINKASSISTANT_H
-#define HARDLINKASSISTANT_H
+#ifndef PROGRESSDIALOG_H
+#define PROGRESSDIALOG_H
 
 // Qt includes
-#include <QApplication>
-#include <QObject>
-#include <QJsonArray>
-#include <QJsonObject>
+#include <QDialog>
 
-class HardlinkAssistant : public QObject
+// gta5hla includes
+#include "HardlinkAssistant.h"
+
+namespace Ui {
+class ProgressDialog;
+}
+
+class ProgressDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit HardlinkAssistant(QObject *parent = nullptr);
-    void findPaths();
-    void findMasterGame();
-    bool linkFile(const QString &masterGamePath, const QString &slaveGamePath, const QString &gameFile);
-    bool linkGame(const QString &masterGamePath, const QString &slaveGamePath, const QStringList &masterGameFiles);
-    const QString& getMasterGame();
-    const QJsonObject& getJsonData();
-    static const QStringList getGameFiles(const QString &dirPath);
-    static const QString getGameVersion(const QString &dirPath);
-    static const QString getExecutableVersion(const QString &filePath);
-    void setMasterGame(const QString &masterGame);
-    void setJsonData(QJsonObject jsonData);
+    explicit ProgressDialog(HardlinkAssistant *hla, QWidget *parent = nullptr);
+    void setLinkLabelText(const QString &text);
+    ~ProgressDialog();
 
-signals:
+public slots:
     void linkProgressCurrentUpdated(int current);
     void linkProgressMaxUpdated(int max);
-    void logUpdated(const QString &text);
+    void appendLog(const QString &text);
 
 private:
-    QString m_masterGame;
-    QJsonObject m_jsonData;
+    HardlinkAssistant *hla;
+    Ui::ProgressDialog *ui;
 };
 
-#endif // HARDLINKASSISTANT_H
+#endif // PROGRESSDIALOG_H

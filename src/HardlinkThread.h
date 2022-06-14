@@ -16,40 +16,32 @@
 * responsible for anything with use of the software, you are self responsible.
 *****************************************************************************/
 
+#ifndef HARDLINKTHREAD_H
+#define HARDLINKTHREAD_H
+
 // Qt includes
-#include <QApplication>
-#include <QJsonDocument>
+#include <QObject>
+#include <QThread>
 
 // gta5hla includes
 #include "HardlinkAssistant.h"
-#include "UserInterface.h"
 
-int main(int argc, char *argv[])
+class HardlinkThread : public QThread
 {
-#if QT_VERSION >= 0x050600
-#if QT_VERSION < 0x060000
-    QApplication::setAttribute(Qt::AA_EnableHighDpiScaling, true);
-    QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps, true);
-#endif
-#endif
-    QApplication a(argc, argv);
-    a.setApplicationName("gta5hla");
-    a.setApplicationVersion("0.1.0");
+    Q_OBJECT
+public:
+    explicit HardlinkThread(HardlinkAssistant *hla, const QString &masterGamePath, const QString &slaveGamePath, const QStringList &masterGameFiles, QObject *parent = nullptr);
+    bool isOk();
 
-    HardlinkAssistant hla;
+private:
+    HardlinkAssistant *hla;
+    bool m_ok;
+    QString m_masterGamePath;
+    QString m_slaveGamePath;
+    QStringList m_masterGameFiles;
 
-#ifdef GTA5HLA_DEBUG
-    QJsonDocument jsonDocument;
-    jsonDocument.setObject(hla.getJsonData());
-    qDebug() << jsonDocument.toJson(QJsonDocument::Compact);
-#endif
+protected:
+    void run();
+};
 
-#ifdef GTA5HLA_GUI
-    UserInterface appUi(&hla);
-    appUi.show();
-
-    return a.exec();
-#else
-    return 0;
-#endif
-}
+#endif // HARDLINKTHREAD_H
