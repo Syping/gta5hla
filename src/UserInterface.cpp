@@ -106,8 +106,8 @@ void UserInterface::on_btnSteam_clicked()
         gameJsonData["Version"] = gameVersion;
         gameJsonData["Files"] = QJsonArray::fromStringList(HardlinkAssistant::getGameFiles(gamePath));
 
-        ui->txtEpicGames->setText(gamePath);
-        ui->labEpicGames->setText(tr("Epic Games (%1):").arg(gameVersion));
+        ui->txtSteam->setText(gamePath);
+        ui->labSteam->setText(tr("Steam (%1):").arg(gameVersion));
 
         QJsonObject jsonData = hla->getJsonData();
         jsonData["Steam"] = gameJsonData;
@@ -129,6 +129,9 @@ void UserInterface::on_btnEpicGames_clicked()
         gameJsonData["Path"] = gamePath;
         gameJsonData["Version"] = gameVersion;
         gameJsonData["Files"] = QJsonArray::fromStringList(HardlinkAssistant::getGameFiles(gamePath));
+
+        ui->txtEpicGames->setText(gamePath);
+        ui->labEpicGames->setText(tr("Epic Games (%1):").arg(gameVersion));
 
         QJsonObject jsonData = hla->getJsonData();
         jsonData["EpicGames"] = gameJsonData;
@@ -158,6 +161,11 @@ void UserInterface::on_btnLink_clicked()
             return;
 
         hla->setMasterGame(masterGame);
+    }
+
+    if (masterGame.isEmpty()) {
+        QMessageBox::warning(this, "gta5hla", "Can't find a Main Game to link to!");
+        return;
     }
 
     QStringList gameList;

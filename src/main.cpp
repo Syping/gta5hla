@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
 #endif
     QApplication a(argc, argv);
     a.setApplicationName("gta5hla");
-    a.setApplicationVersion("0.1.0");
+    a.setApplicationVersion("0.1.1");
 
 #ifdef Q_OS_WIN
     a.setFont(QApplication::font("QMenu"));
