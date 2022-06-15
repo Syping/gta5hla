@@ -74,72 +74,78 @@ void UserInterface::logUpdated(const QString &text)
 void UserInterface::on_btnSocialClub_clicked()
 {
     const QString gamePath = QFileDialog::getExistingDirectory(this, tr("Select GTA V Social Club folder"));
-    if (!gamePath.isEmpty() && QFile::exists(gamePath + "/GTA5.exe")) {
-        const QString gameVersion = HardlinkAssistant::getGameVersion(gamePath);
+    if (!gamePath.isEmpty()) {
+        if (QFile::exists(gamePath + "/GTA5.exe")) {
+            const QString gameVersion = HardlinkAssistant::getGameVersion(gamePath);
 
-        QJsonObject gameJsonData;
-        gameJsonData["Path"] = gamePath;
-        gameJsonData["Version"] = gameVersion;
-        gameJsonData["Files"] = QJsonArray::fromStringList(HardlinkAssistant::getGameFiles(gamePath));
+            QJsonObject gameJsonData;
+            gameJsonData["Path"] = gamePath;
+            gameJsonData["Version"] = gameVersion;
+            gameJsonData["Files"] = QJsonArray::fromStringList(HardlinkAssistant::getGameFiles(gamePath));
 
-        ui->txtSocialClub->setText(gamePath);
-        ui->labSocialClub->setText(tr("Social Club (%1):").arg(gameVersion));
+            ui->txtSocialClub->setText(gamePath);
+            ui->labSocialClub->setText(tr("Social Club (%1):").arg(gameVersion));
 
-        QJsonObject jsonData = hla->getJsonData();
-        jsonData["SocialClub"] = gameJsonData;
-        hla->setJsonData(jsonData);
-        hla->findMasterGame();
-    }
-    else {
-        QMessageBox::warning(this, tr("Select GTA V Social Club folder"), "The selected folder is not a valid GTA V folder!");
+            QJsonObject jsonData = hla->getJsonData();
+            jsonData["SocialClub"] = gameJsonData;
+            hla->setJsonData(jsonData);
+            hla->findMasterGame();
+        }
+        else {
+            QMessageBox::warning(this, tr("Select GTA V Social Club folder"), "The selected folder is not a valid GTA V folder!");
+        }
     }
 }
 
 void UserInterface::on_btnSteam_clicked()
 {
     const QString gamePath = QFileDialog::getExistingDirectory(this, tr("Select GTA V Steam folder"));
-    if (!gamePath.isEmpty() && QFile::exists(gamePath + "/GTA5.exe")) {
-        const QString gameVersion = HardlinkAssistant::getGameVersion(gamePath);
+    if (!gamePath.isEmpty()) {
+        if (QFile::exists(gamePath + "/GTA5.exe")) {
+            const QString gameVersion = HardlinkAssistant::getGameVersion(gamePath);
 
-        QJsonObject gameJsonData;
-        gameJsonData["Path"] = gamePath;
-        gameJsonData["Version"] = gameVersion;
-        gameJsonData["Files"] = QJsonArray::fromStringList(HardlinkAssistant::getGameFiles(gamePath));
+            QJsonObject gameJsonData;
+            gameJsonData["Path"] = gamePath;
+            gameJsonData["Version"] = gameVersion;
+            gameJsonData["Files"] = QJsonArray::fromStringList(HardlinkAssistant::getGameFiles(gamePath));
 
-        ui->txtSteam->setText(gamePath);
-        ui->labSteam->setText(tr("Steam (%1):").arg(gameVersion));
+            ui->txtSteam->setText(gamePath);
+            ui->labSteam->setText(tr("Steam (%1):").arg(gameVersion));
 
-        QJsonObject jsonData = hla->getJsonData();
-        jsonData["Steam"] = gameJsonData;
-        hla->setJsonData(jsonData);
-        hla->findMasterGame();
-    }
-    else {
-        QMessageBox::warning(this, tr("Select GTA V Steam folder"), "The selected folder is not a valid GTA V folder!");
+            QJsonObject jsonData = hla->getJsonData();
+            jsonData["Steam"] = gameJsonData;
+            hla->setJsonData(jsonData);
+            hla->findMasterGame();
+        }
+        else {
+            QMessageBox::warning(this, tr("Select GTA V Steam folder"), "The selected folder is not a valid GTA V folder!");
+        }
     }
 }
 
 void UserInterface::on_btnEpicGames_clicked()
 {
     const QString gamePath = QFileDialog::getExistingDirectory(this, tr("Select GTA V Epic Games folder"));
-    if (!gamePath.isEmpty() && QFile::exists(gamePath + "/GTA5.exe")) {
-        const QString gameVersion = HardlinkAssistant::getGameVersion(gamePath);
+    if (!gamePath.isEmpty()) {
+        if (QFile::exists(gamePath + "/GTA5.exe")) {
+            const QString gameVersion = HardlinkAssistant::getGameVersion(gamePath);
 
-        QJsonObject gameJsonData;
-        gameJsonData["Path"] = gamePath;
-        gameJsonData["Version"] = gameVersion;
-        gameJsonData["Files"] = QJsonArray::fromStringList(HardlinkAssistant::getGameFiles(gamePath));
+            QJsonObject gameJsonData;
+            gameJsonData["Path"] = gamePath;
+            gameJsonData["Version"] = gameVersion;
+            gameJsonData["Files"] = QJsonArray::fromStringList(HardlinkAssistant::getGameFiles(gamePath));
 
-        ui->txtEpicGames->setText(gamePath);
-        ui->labEpicGames->setText(tr("Epic Games (%1):").arg(gameVersion));
+            ui->txtEpicGames->setText(gamePath);
+            ui->labEpicGames->setText(tr("Epic Games (%1):").arg(gameVersion));
 
-        QJsonObject jsonData = hla->getJsonData();
-        jsonData["EpicGames"] = gameJsonData;
-        hla->setJsonData(jsonData);
-        hla->findMasterGame();
-    }
-    else {
-        QMessageBox::warning(this, tr("Select GTA V Epic Games folder"), "The selected folder is not a valid GTA V folder!");
+            QJsonObject jsonData = hla->getJsonData();
+            jsonData["EpicGames"] = gameJsonData;
+            hla->setJsonData(jsonData);
+            hla->findMasterGame();
+        }
+        else {
+            QMessageBox::warning(this, tr("Select GTA V Epic Games folder"), "The selected folder is not a valid GTA V folder!");
+        }
     }
 }
 

@@ -18,7 +18,7 @@
 
 cmake_minimum_required(VERSION 3.7)
 
-project(gta5hla LANGUAGES CXX)
+project(gta5hla VERSION 0.1.2 LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -46,8 +46,11 @@ if(WIN32)
         -D_UNICODE
         -DWIN32
     )
+    string(TIMESTAMP gta5hla_BUILD_YEAR "%Y" UTC)
+    configure_file(src/win32/gta5hla.rc.in "${gta5hla_BINARY_DIR}/resources/gta5hla.rc" @ONLY)
+    configure_file(src/win32/gta5hla.exe.manifest "${gta5hla_BINARY_DIR}/resources/gta5hla.exe.manifest" COPYONLY)
     list(APPEND GTA5HLA_RESOURCES
-        src/win32/app.rc
+        "${gta5hla_BINARY_DIR}/resources/gta5hla.rc"
     )
 endif()
 
@@ -77,6 +80,11 @@ set(GTA5HLA_FORMS
     src/UserInterface.ui
 )
 
+configure_file(src/gta5hla_config.h.in "${gta5hla_BINARY_DIR}/include/gta5hla_config.h" @ONLY)
+list(APPEND GTA5HLA_HEADERS
+    "${gta5hla_BINARY_DIR}/include/gta5hla_config.h"
+)
+
 add_executable(gta5hla
     WIN32
     ${GTA5HLA_HEADERS}
@@ -86,6 +94,7 @@ add_executable(gta5hla
 )
 
 target_compile_definitions(gta5hla PRIVATE ${GTA5HLA_DEFINES})
+target_include_directories(gta5hla PRIVATE "${gta5hla_BINARY_DIR}/include")
 target_link_libraries(gta5hla PRIVATE Qt${QT_VERSION_MAJOR}::Widgets ${GTA5HLA_LIBS})
 
 install(TARGETS gta5hla DESTINATION bin)

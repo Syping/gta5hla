@@ -28,9 +28,11 @@
 // gta5hla includes
 #include "HardlinkAssistant.h"
 
-// Windows includes
+// System includes
 #ifdef Q_OS_WIN
 #include <windows.h>
+#else
+#include <unistd.h>
 #endif
 
 HardlinkAssistant::HardlinkAssistant(QObject *parent) : QObject(parent)
@@ -147,7 +149,7 @@ void HardlinkAssistant::findMasterGame()
         }
     }
 
-    if (gameVersionMap.count() < 2)
+    if (gameVersionMap.isEmpty())
         return;
 
     QStringList gameVersionList = gameVersionMap.keys();

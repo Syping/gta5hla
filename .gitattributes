@@ -1,0 +1,14 @@
+# Auto detect text files and perform LF normalization
+* text=auto eol=lf
+
+# Development files
+CMakeLists.txt text eol=lf
+*.cmake text eol=lf
+*.cpp text eol=lf
+*.h text eol=lf
+*.h.in text eol=lf
+*.ui text eol=lf
+*.yml text eol=lf
+
+# Windows development files
+*.rc.in text encoding=cp1252 eol=crlf

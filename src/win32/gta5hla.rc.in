@@ -3,8 +3,8 @@
 CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "gta5hla.exe.manifest"
 #include <windows.h>
 VS_VERSION_INFO     VERSIONINFO
-FILEVERSION         0, 1, 1, 0
-PRODUCTVERSION      0, 1, 1, 0
+FILEVERSION         @gta5hla_VERSION_MAJOR@, @gta5hla_VERSION_MINOR@, @gta5hla_VERSION_PATCH@, 0
+PRODUCTVERSION      @gta5hla_VERSION_MAJOR@, @gta5hla_VERSION_MINOR@, @gta5hla_VERSION_PATCH@, 0
 FILEFLAGSMASK       0x3fL
 FILEFLAGS           0
 FILEOS              VOS_NT_WINDOWS32
@@ -20,13 +20,13 @@ BEGIN
         BLOCK   "040904b0"
         BEGIN
             VALUE   "CompanyName",      "Syping"
-            VALUE   "FileDescription",  "gta5hla"
-            VALUE   "FileVersion",      "0.1.1"
+            VALUE   "FileDescription",  "Hardlinking Assistant for GTA V"
+            VALUE   "FileVersion",      "@gta5hla_VERSION@"
             VALUE   "InternalName",     "gta5hla"
-            VALUE   "LegalCopyright",   "Copyright © 2022 Syping"
+            VALUE   "LegalCopyright",   "Copyright © @gta5hla_BUILD_YEAR@ Syping"
             VALUE   "OriginalFilename", "gta5hla.exe"
             VALUE   "ProductName",      "gta5hla"
-            VALUE   "ProductVersion",   "0.1.1"
+            VALUE   "ProductVersion",   "@gta5hla_VERSION@"
         END
     END
 END
